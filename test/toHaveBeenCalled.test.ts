@@ -66,9 +66,24 @@ function makeNumberChoice(data: number) {
 
 
 
-it('should call the callback with option1 if number arg is less than 10', () => {
+it('should call the function with option1 if number arg is less than 10', () => {
   const mock = jest.spyOn(callBackModule, 'aCallback')
-  console.log(callBackModule)
   makeNumberChoice(3)
   expect(callBackModule.aCallback).toHaveBeenCalledWith('option1')
+  jest.resetAllMocks()
+})
+
+const makeNumberChoiceWithCallback = (data: number, callback: typeof callBackModule.aCallback) => {
+    if(data < 10) {
+      return callback('option1')
+    }
+    else {
+      return callback('option2')
+    }
+}
+
+it('should call a callback with correct arguments', () => {
+  const callback = jest.fn((data: ReturnType<typeof aCallback>) => data)
+  makeNumberChoiceWithCallback(3, callback)
+  expect(callback).toHaveBeenCalledWith('option1')
 })
